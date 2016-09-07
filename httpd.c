@@ -33,7 +33,7 @@
 #define STDOUT  1
 #define STDERR  2
 
-void accept_request(void *);
+void* accept_request(void *);
 void bad_request(int);
 void cat(int, FILE *);
 void cannot_execute(int);
@@ -51,7 +51,7 @@ void unimplemented(int);
  * return.  Process the request appropriately.
  * Parameters: the socket connected to the client */
 /**********************************************************************/
-void accept_request(void *arg)
+void* accept_request(void *arg)
 {
     int client = *(int*)arg;
     char buf[1024];
@@ -78,7 +78,7 @@ void accept_request(void *arg)
     if (strcasecmp(method, "GET") && strcasecmp(method, "POST"))
     {
         unimplemented(client);
-        return;
+        return NULL;
     }
 
     if (strcasecmp(method, "POST") == 0)
@@ -130,6 +130,7 @@ void accept_request(void *arg)
     }
 
     close(client);
+    return NULL;
 }
 
 /**********************************************************************/
@@ -499,8 +500,8 @@ int main(void)
                 &client_name_len);
         if (client_sock == -1)
             error_die("accept");
-        /* accept_request(client_sock); */
-        if (pthread_create(&newthread , NULL, (void *)accept_request, (void *)&client_sock) != 0)
+  //       accept_request(client_sock); 
+       if (pthread_create(&newthread , NULL, accept_request, (void *)&client_sock) != 0)
             perror("pthread_create");
     }
 

@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -Tw
+#!/usr/bin/perl5.18.2 -Tw
 
 use strict;
 use CGI;
